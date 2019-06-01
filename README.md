@@ -1,0 +1,2 @@
+# streamq
+Cooperative music streaming
