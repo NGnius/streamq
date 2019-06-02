@@ -29,22 +29,21 @@ def get_connection():
     return database_connections[thread_id]
 
 def fetch_all(sql, params=None):
-    database = get_connection()
-    cursor = database.cursor()
-    if params is not None:
-        cursor.execute(sql, params)
-    else:
-        cursor.execute(sql)
+    cursor = execute(sql, params=params)
     return cursor.fetchall()
 
-def fetch_one(sql, params = None):
+def fetch_one(sql, params=None):
+    cursor = execute(sql, params=params)
+    return cursor.fetchone()
+
+def execute(sql, params=None):
     database = get_connection()
     cursor = database.cursor()
     if params is not None:
         cursor.execute(sql, params)
     else:
         cursor.execute(sql)
-    return cursor.fetchone()
+    return cursor
 
 def load_object(table='pickles', column='bytes', match='1=1', lock=False, no_fail=True):
     if lock:

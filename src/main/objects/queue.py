@@ -4,6 +4,7 @@ Created 2019-06-01 by NGnius
 
 from ..repo import gherkin
 from .sound import Sound
+from ..tools import codes
 
 class SoundQueue():
     def __init__(self, id=None, sounds=list()):
@@ -49,3 +50,9 @@ class SoundQueue():
                     self.sounds.insert(index, s)
             else:
                 raise TypeError("Only Sound and SoundQueue objects can be added to a SoundQueue")
+
+    def to_jsonable(self):
+        items = list()
+        for s in self.sounds:
+            items.append(s.to_jsonable())
+        return {'id': self.id, 'code': codes.id2code(self.id), 'items':items}

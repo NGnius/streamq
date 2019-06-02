@@ -10,4 +10,4 @@ Current functionality is some test cases for some objects (so many features! /s)
 * Access a queue with a code
 * Single player ("DJ") designation
 * Deployable to App Engine & LAN setups
-* Can run without lag on a Raspberry Pi
+* Run without lag on a Raspberry Pi
