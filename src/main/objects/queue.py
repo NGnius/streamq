@@ -8,6 +8,7 @@ from ..tools import codes
 
 class SoundQueue():
     def __init__(self, id=None, sounds=list()):
+        self.version = 0
         self.id = id
         self.sounds = sounds
 

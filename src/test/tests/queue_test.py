@@ -1,8 +1,9 @@
-import unittest
-from ..main.objects import queue
+from ..objects.basecase import BaseCase
+from ...main.objects import queue
 
-class SoundQueueTest(unittest.TestCase):
+class SoundQueueTest(BaseCase):
     def setUp(self):
+        super().setUp()
         self.queue1 = queue.SoundQueue()
         self.queue2 = queue.SoundQueue()
 

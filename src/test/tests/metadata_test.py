@@ -1,7 +1,7 @@
-import unittest
-from ..main.tools import metadata
+from ..objects.basecase import BaseCase
+from ...main.tools import metadata
 
-class MetadataTest(unittest.TestCase):
+class MetadataTest(BaseCase):
     def test_nonsound(self):
         file = load_file('nonsound')
         data = metadata.audio(file)

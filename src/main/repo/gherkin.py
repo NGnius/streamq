@@ -28,6 +28,15 @@ def get_connection():
         database_connections[thread_id] = sqlite3.connect(database_path)
     return database_connections[thread_id]
 
+def close_db():
+    global database_connections, database_path
+    thread_id = threading.get_ident()
+    if thread_id in database_connections:
+        database_connections[thread_id].close()
+        return True
+    return False
+
+
 def fetch_all(sql, params=None):
     cursor = execute(sql, params=params)
     return cursor.fetchall()
@@ -36,28 +45,32 @@ def fetch_one(sql, params=None):
     cursor = execute(sql, params=params)
     return cursor.fetchone()
 
-def execute(sql, params=None):
+def execute(sql, params=None, commit=False):
     database = get_connection()
     cursor = database.cursor()
     if params is not None:
         cursor.execute(sql, params)
     else:
         cursor.execute(sql)
+    if commit is True:
+        save()
     return cursor
 
-def load_object(table='pickles', column='bytes', match='1=1', lock=False, no_fail=True):
+def load_object(table='pickles', column='bytes', id_column='id', id=None, lock=False, no_fail=True):
     if lock:
         lock_row(table=table, match=match)
-    row = fetch_one('SELECT %s FROM %s WHERE %s' % (column, table, match))
+    row = fetch_one('SELECT %s FROM %s WHERE %s="%s"' % (column, table, id_column, id))
     if row is None:
         return
     bytes = row[0]
     return load_byte(bytes, no_fail=no_fail)
 
-def save_object(object, table='pickles', column='bytes', match='1=0', release=False):
+def save_object(object, table='pickles', column='bytes', id_column='id', id=None, release=False):
     database = get_connection()
+    if id is None:
+        id = object.id
     bytes = dump_byte(object)
-    database.cursor().execute('UPDATE %s SET %s = ? WHERE %s' % (table, column, match), (bytes,))
+    database.cursor().execute('UPDATE %s SET %s = ? WHERE %s="%s"' % (table, column, id_column, id), (bytes,))
     save()
     if release:
         unlock_row(table=table, match=match)
@@ -76,7 +89,7 @@ def add_columns(table, columns, commit=True):
 def add_table(table, columns):
     database = get_connection()
     cursor = database.cursor()
-    cursor.execute('CREATE TABLE IF NOT EXISTS %s (%s)' % (table, columns))
+    cursor.execute('CREATE TABLE IF NOT EXISTS "%s" (%s)' % (table, columns))
 
 def load_byte(bytes, no_fail=True):
     try:
@@ -115,3 +128,15 @@ def unlock_row(table='pickles', match='1=0'):
     if table+str(row[0]) not in locks:
         locks[table+str(row[0])]= threading.Event()
     locks[table+str(row[0])].set()
+
+def max_in_column(table='pickles', column='bytes', default=-1):
+    row = fetch_one('SELECT %s FROM %s ORDER BY %s desc LIMIT 1' % (column, table, column))
+    if row is None:
+        return default
+    return row[0]
+
+def min_in_column(table='pickles', column='bytes', default=-1):
+    row = fetch_one('SELECT %s FROM %s ORDER BY %s asc LIMIT 1' % (column, table, column))
+    if row is None:
+        return default
+    return row[0]

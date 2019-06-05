@@ -26,6 +26,8 @@ class Code():
         return self.code
 
 def code2id(code):
+    if code is None or code == '':
+        return
     pos = 0
     result = 0
     radix = len(READABLE_CHARS)
@@ -36,6 +38,8 @@ def code2id(code):
     return result
 
 def id2code(id):
+    if id < 0:
+        return
     result = ''
     radix = len(READABLE_CHARS)
     m_id = int(id)
