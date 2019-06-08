@@ -75,7 +75,7 @@ class SoundQueue():
             random.shuffle(upcoming_sounds)
             self.effective_queue = self.effective_queue[:self.index] + upcoming_sounds
         else:
-            self.effective_queue = list(self.sounds)
+            self.effective_queue = self.sounds
 
     def now(self):
         if (self.index < 0) or (self.index >= len(self.effective_queue)):

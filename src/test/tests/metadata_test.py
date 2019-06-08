@@ -22,4 +22,4 @@ class MetadataTest(BaseCase):
         file.close()
 
 def load_file(file):
-    return open('./src/test/test_data/metadata/'+file, 'rb')
+    return open('./src/test/test_data/audio/'+file, 'rb')

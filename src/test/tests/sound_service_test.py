@@ -12,6 +12,7 @@ class SoundServiceTest(BaseCase):
         gherkin.save_object(s, table='sounds')
 
     def test_save(self):
+        # new save
         id1 = 0
         s1 = Sound(id=id1)
         sound_service.save_sound(s1)
@@ -19,7 +20,8 @@ class SoundServiceTest(BaseCase):
         self.assertIsNotNone(sound_row)
         self.assertEqual(sound_row[0], id1)
 
-        id2 = 42
+        # overwrite
+        id2 = self.sound_id
         s2 = Sound(id=id2)
         sound_service.save_sound(s2)
         sound_row = gherkin.fetch_one('SELECT id FROM sounds WHERE id=?', (id2,))

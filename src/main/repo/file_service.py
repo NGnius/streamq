@@ -28,6 +28,8 @@ def get_file(id, file_like=False):
 
 def save_file(id, data):
     max_id = gherkin.max_in_column(table='sounds', column='id')
-    if id > max_id:
-        gherkin.execute('INSERT INTO files VALUES id (?)', (id,))
-    gherkin.execute('UPDATE files SET file=? WHERE id=?', (data, id))
+    row = gherkin.fetch_one('SELECT id FROM files WHERE id=?', (id,))
+    if row is None:
+        gherkin.execute('INSERT INTO files (id) VALUES (?)', (id,))
+    gherkin.execute('UPDATE files SET bytes=? WHERE id=?', (data, id))
+    gherkin.save()
