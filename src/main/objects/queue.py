@@ -104,6 +104,6 @@ class SoundQueue():
 
     def to_jsonable(self):
         items = list()
-        for s in self.sounds:
+        for s in self.effective_queue:
             items.append(s.to_jsonable())
-        return {'id': self.id, 'code': codes.id2code(self.id), 'items':items}
+        return {'id': self.id, 'code': codes.id2code(self.id), 'items':items, 'index':self.index}

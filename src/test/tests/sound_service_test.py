@@ -42,3 +42,9 @@ class SoundServiceTest(BaseCase):
 
         s2 = sound_service.get_sound(id1)
         self.assertEqual(s2, s1)
+
+    def test_nocreate(self):
+        id = 404
+        s1 = sound_service.get_sound(id, create=False)
+
+        self.assertIsNone(s1)

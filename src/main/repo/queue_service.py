@@ -9,14 +9,14 @@ from ..objects import queue
 
 gherkin.add_table('queues', 'id INTEGER PRIMARY KEY, bytes BLOB')
 
-def get_queue(id):
+def get_queue(id, create=True):
     if id >= 0:
         q = gherkin.load_object(table='queues', id=id)
     else:
         # DO NOT USE NEGATIVE IDs IN PRODUCTION!
         # TODO: warn/error if testing mode not detected
         q = None
-    if q is None:
+    if q is None and create is True:
         q = queue.SoundQueue(id=id)
     return q
 

@@ -81,3 +81,9 @@ class QueueServiceTest(BaseCase):
         q1._shuffle = True  # effective_queue and sounds cannot be assumed equal
         queue_service.save_sounds(q1)
         self.assertEqual(sound_service.get_sound(s3.id).to_jsonable(), s3.to_jsonable())
+
+    def test_nocreate(self):
+        id = 404
+        q1 = queue_service.get_queue(id, create=False)
+
+        self.assertIsNone(q1)

@@ -8,14 +8,14 @@ from ..objects import sound
 
 gherkin.add_table('sounds', 'id INTEGER PRIMARY KEY, bytes BLOB')
 
-def get_sound(id):
+def get_sound(id, create=True):
     if id >= 0:
         s = gherkin.load_object(table='sounds', id=id)
     else:
         # DO NOT USE NEGATIVE IDs IN PRODUCTION!
         # TODO: warn/error if testing mode not detected
         s = None
-    if s is None:
+    if s is None and create is True:
         s = sound.Sound(id=id)
     return s
 
