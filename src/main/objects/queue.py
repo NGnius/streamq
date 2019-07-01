@@ -85,11 +85,13 @@ class SoundQueue():
     def next(self):
         if self.repeat_one is True:
             return self.now()
-        elif (self.index + 1) >= len(self.effective_queue):
+        elif (self.index + 1) > len(self.effective_queue):
             if self.repeat is True:
                 self.index = -1
             else:
                 return
+        elif (self.index + 1) == len(self.effective_queue) and self.repeat is True:
+            self.index = -1
         self.index += 1
         return self.now()
 

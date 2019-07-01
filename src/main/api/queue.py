@@ -67,7 +67,10 @@ def next():
     queue.next()
     queue_service.save_queue(queue)
     release_queue_lock(queue.id)
-    return jsonify(queue.now().to_jsonable())
+    queue_now = queue.now()
+    if queue_now is None:
+        return api_tools.error(404, "Queue has completed")
+    return jsonify(queue_now.to_jsonable())
 
 @blueprint.route('/previous', methods=['GET', 'POST'])
 def previous():
@@ -85,6 +88,8 @@ def repeat():
     err, queue = do_preamble(lock=True)
     if err is not None:
         return err
+    # not implemented
+    queue_service.save_queue(queue)
     release_queue_lock(queue.id)
     return jsonify(queue.to_jsonable())
 
@@ -100,6 +105,7 @@ def add():
     if sound is None:
         return api_tools.error(404, 'Sound does not exist.')
     queue += sound
+    queue_service.save_queue(queue)
     release_queue_lock(queue.id)
     return jsonify(queue.to_jsonable())
 

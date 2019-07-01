@@ -52,7 +52,7 @@ class SoundQueueTest(BaseCase):
         self.assertEqual(self.queue1.next(), sound1)
         self.assertEqual(self.queue1.next(), sound2)
         self.assertIsNone(self.queue1.next())
-        self.assertEqual(self.queue1.index, len(self.queue1.effective_queue)-1)
+        self.assertEqual(self.queue1.index, len(self.queue1.effective_queue))
 
     def test_previous(self):
         sound1 = queue.Sound()
