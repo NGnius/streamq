@@ -44,7 +44,7 @@ def shuffle():
         mode = False
     else:
         mode = True
-    queue.shuffle(shuffle=mode)
+    queue.shuffle(mode=mode)
     queue_service.save_queue(queue)
     release_queue_lock(queue.id)
     return jsonify(queue.to_jsonable())

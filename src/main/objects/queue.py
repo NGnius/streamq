@@ -68,8 +68,8 @@ class SoundQueue():
             else:
                 raise TypeError("Only Sound and SoundQueue objects can be added to a SoundQueue")
 
-    def shuffle(self, shuffle=True):
-        self._shuffle = shuffle
+    def shuffle(self, mode=True):
+        self._shuffle = mode
         if self._shuffle is True:
             upcoming_sounds = self.effective_queue[self.index:]
             random.shuffle(upcoming_sounds)
@@ -108,4 +108,12 @@ class SoundQueue():
         items = list()
         for s in self.effective_queue:
             items.append(s.to_jsonable())
-        return {'id': self.id, 'code': codes.id2code(self.id), 'items':items, 'index':self.index}
+        return {
+            'code': codes.id2code(self.id),
+            'id': self.id,
+            'index': self.index,
+            'items': items,
+            'repeat-all': self.repeat,
+            'repeat-one': self.repeat_one,
+            'shuffle': self._shuffle
+            }
