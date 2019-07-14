@@ -7,14 +7,16 @@ from .sound import Sound
 from ..tools import codes
 import random
 
+CURRENT_VERSION = '0.0.0.1'
+
 class SoundQueue():
-    def __init__(self, id=None, sounds=list(), shuffle=False, repeat=False, repeat_one=False, index=-1):
-        self.version = 0
+    def __init__(self, id=None, sounds=list(), shuffle=False, repeat_all=False, repeat_one=False, index=-1):
+        self.version = str(CURRENT_VERSION)
         self.id = id
         self.sounds = sounds
         self.effective_queue = self.sounds
-        self.shuffle(shuffle=shuffle)
-        self.repeat = repeat
+        self.shuffle(mode=shuffle)
+        self.repeat_all = repeat_all
         self.repeat_one = repeat_one
         self.index = index
 
@@ -31,7 +33,7 @@ class SoundQueue():
         else:
             raise TypeError("Only Sound and SoundQueue objects can be added to a SoundQueue")
         # adding to a shuffle queue without an index should add to random spot
-        self.shuffle(shuffle=self._shuffle)
+        self.shuffle(mode=self._shuffle)
         return self
 
     def __eq__(self, other):
@@ -86,18 +88,18 @@ class SoundQueue():
         if self.repeat_one is True:
             return self.now()
         elif (self.index + 1) > len(self.effective_queue):
-            if self.repeat is True:
+            if self.repeat_all is True:
                 self.index = -1
             else:
                 return
-        elif (self.index + 1) == len(self.effective_queue) and self.repeat is True:
+        elif (self.index + 1) == len(self.effective_queue) and self.repeat_all is True:
             self.index = -1
         self.index += 1
         return self.now()
 
     def previous(self):
         if (self.index - 1) < 0:
-            if self.repeat is True:
+            if self.repeat_all is True:
                 self.index = len(self.effective_queue)
             else:
                 return
@@ -113,7 +115,11 @@ class SoundQueue():
             'id': self.id,
             'index': self.index,
             'items': items,
-            'repeat-all': self.repeat,
+            'repeat-all': self.repeat_all,
             'repeat-one': self.repeat_one,
             'shuffle': self._shuffle
             }
+
+def upgrade(old_queue):
+    # TODO: handle conversion from old gherkined objects
+    pass

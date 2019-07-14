@@ -40,9 +40,13 @@ class SoundQueueTest(BaseCase):
         sound2 = queue.Sound()
         sound3 = queue.Sound()
         self.queue1.sounds = self.queue1.effective_queue = [sound1, sound2, sound3]
-        self.queue1.shuffle()
+        self.queue1.shuffle(mode=True)
 
         self.assertTrue(self.queue1._shuffle)
+        self.assertFalse(self.queue1.sounds is self.queue1.effective_queue)
+
+        self.queue1.shuffle(mode=False)
+        self.assertEqual(self.queue1.sounds, self.queue1.effective_queue)
 
     def test_next(self):
         sound1 = queue.Sound()
@@ -81,7 +85,7 @@ class SoundQueueTest(BaseCase):
         sound2 = queue.Sound()
         self.queue1.sounds = self.queue1.effective_queue = [sound1, sound2]
         self.queue1.index = 1
-        self.queue1.repeat = True
+        self.queue1.repeat_all = True
 
         self.assertEqual(self.queue1.next(), sound1)
         self.assertEqual(self.queue1.index, 0)

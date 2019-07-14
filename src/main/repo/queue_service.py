@@ -10,6 +10,7 @@ from ..objects import queue
 gherkin.add_table('queues', 'id INTEGER PRIMARY KEY, bytes BLOB')
 
 def get_queue(id, create=True):
+    # TODO: handle upgrades from old gherkined objects
     if id >= 0:
         q = gherkin.load_object(table='queues', id=id)
     else:

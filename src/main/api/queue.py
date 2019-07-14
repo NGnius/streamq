@@ -89,6 +89,25 @@ def repeat():
     if err is not None:
         return err
     # not implemented
+    repeat_mode = api_tools.get_param('mode')
+    if isinstance(repeat_mode, str):
+        if repeat_mode.lower() in ['one', '1', 'o']:
+            mode = 'one'
+        elif repeat_mode.lower() in ['none', 'n']:
+            mode = 'none'
+        else:
+            mode = 'all'
+    else:
+        mode = 'none'
+    if mode == 'all':
+        queue.repeat_one = False
+        queue.repeat_all = True
+    elif mode == 'one':
+        queue.repeat_one = True
+        queue.repeat_all = False
+    else:
+        queue.repeat_one = False
+        queue.repeat_all = False
     queue_service.save_queue(queue)
     release_queue_lock(queue.id)
     return jsonify(queue.to_jsonable())
